@@ -152,11 +152,18 @@ public class filemanager : IHttpHandler
 			sb.AppendLine("\"timestamp\": "+ ((Int32)(fileInfo.CreationTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() +", ");
 		if (IsImage(fileInfo)) 
 		{
-			using (System.Drawing.Image img = System.Drawing.Image.FromFile(fileInfo.FullName))
-			{
-				sb.AppendLine("\"height\": " + img.Height.ToString() + ",");
-				sb.AppendLine("\"width\": " + img.Width.ToString() + ",");
-			}
+			    try
+			    {
+				using (System.Drawing.Image img = System.Drawing.Image.FromFile(fileInfo.FullName))
+				{
+				    sb.AppendLine("\"height\": " + img.Height.ToString() + ",");
+				    sb.AppendLine("\"width\": " + img.Width.ToString() + ",");
+				}
+			    }
+			    catch (Exception Ex)
+			    {
+				//Can Log Exception to a log file when logger is enabled: This is to handle corrupt files. The above causes a OutOfMemoryException if a file is corrupt
+			    }
 		}
 		else
 		{
